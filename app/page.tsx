@@ -20,6 +20,6 @@ export default function Home() {
 }
 
 function Content() {
-  const messages = useQuery(api.messages.getForCurrentUser);
-  return <div>Authenticated content: {messages?.length}</div>;
+  const user = useQuery(api.users.getCurrentUser);
+  return <div>Welcome {user?.name || "User"}!</div>;
 }
