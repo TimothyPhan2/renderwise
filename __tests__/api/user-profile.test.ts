@@ -1,3 +1,4 @@
+
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { GET, PATCH } from '@/app/api/user-profile/route';
@@ -9,25 +10,26 @@ vi.mock('@clerk/nextjs/server', () => ({
   currentUser: vi.fn(),
 }));
 
-vi.mock('convex/browser', () => ({
-  ConvexHttpClient: vi.fn().mockImplementation(() => ({
+vi.mock('convex/browser', () => {
+  const mockConvexInstance = {
     setAuth: vi.fn(),
     query: vi.fn(),
     mutation: vi.fn(),
-  })),
-}));
+  };
+  
+  return {
+    ConvexHttpClient: vi.fn().mockImplementation(() => mockConvexInstance),
+    __mockConvexInstance: mockConvexInstance,
+  };
+});
 
 describe('User Profile API Routes', () => {
-  let mockConvexClient: any;
+  let mockConvexInstance: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
-    mockConvexClient = {
-      setAuth: vi.fn(),
-      query: vi.fn(),
-      mutation: vi.fn(),
-    };
-    (ConvexHttpClient as any).mockImplementation(() => mockConvexClient);
+    const convexModule = await import('convex/browser');
+    mockConvexInstance = (convexModule as any).__mockConvexInstance;
   });
 
   describe('GET /api/user-profile', () => {
@@ -36,7 +38,7 @@ describe('User Profile API Routes', () => {
       (currentUser as any).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/user-profile');
-      const response = await GET(request);
+      const response = await GET();
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -63,10 +65,10 @@ describe('User Profile API Routes', () => {
         getToken: vi.fn().mockResolvedValue('mock-token'),
       });
       (currentUser as any).mockResolvedValue(mockUser);
-      mockConvexClient.query.mockResolvedValue(mockDbUser);
+      mockConvexInstance.query.mockResolvedValue(mockDbUser);
 
       const request = new NextRequest('http://localhost:3000/api/user-profile');
-      const response = await GET(request);
+      const response = await GET();
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -95,17 +97,17 @@ describe('User Profile API Routes', () => {
         getToken: vi.fn().mockResolvedValue('mock-token'),
       });
       (currentUser as any).mockResolvedValue(mockUser);
-      mockConvexClient.query
+      mockConvexInstance.query
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(createdUser);
-      mockConvexClient.mutation.mockResolvedValue(newUserId);
+      mockConvexInstance.mutation.mockResolvedValue(newUserId);
 
       const request = new NextRequest('http://localhost:3000/api/user-profile');
-      const response = await GET(request);
+      const response = await GET();
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(mockConvexClient.mutation).toHaveBeenCalledWith(
+      expect(mockConvexInstance.mutation).toHaveBeenCalledWith(
         expect.anything(),
         {
           clerkId: 'clerk-123',
@@ -152,8 +154,8 @@ describe('User Profile API Routes', () => {
         userId: 'clerk-123',
         getToken: vi.fn().mockResolvedValue('mock-token'),
       });
-      mockConvexClient.mutation.mockResolvedValue(undefined);
-      mockConvexClient.query.mockResolvedValue(updatedUser);
+      mockConvexInstance.mutation.mockResolvedValue(undefined);
+      mockConvexInstance.query.mockResolvedValue(updatedUser);
 
       const request = new NextRequest('http://localhost:3000/api/user-profile', {
         method: 'PATCH',
@@ -164,7 +166,7 @@ describe('User Profile API Routes', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(mockConvexClient.mutation).toHaveBeenCalledWith(
+      expect(mockConvexInstance.mutation).toHaveBeenCalledWith(
         expect.anything(),
         {
           youtubeChannelId: 'channel-123',
@@ -192,8 +194,8 @@ describe('User Profile API Routes', () => {
         userId: 'clerk-123',
         getToken: vi.fn().mockResolvedValue('mock-token'),
       });
-      mockConvexClient.mutation.mockResolvedValue(undefined);
-      mockConvexClient.query.mockResolvedValue(updatedUser);
+      mockConvexInstance.mutation.mockResolvedValue(undefined);
+      mockConvexInstance.query.mockResolvedValue(updatedUser);
 
       const request = new NextRequest('http://localhost:3000/api/user-profile', {
         method: 'PATCH',
@@ -204,7 +206,7 @@ describe('User Profile API Routes', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(mockConvexClient.mutation).toHaveBeenCalledWith(
+      expect(mockConvexInstance.mutation).toHaveBeenCalledWith(
         expect.anything(),
         {
           stripeCustomerId: 'stripe-customer-123',

@@ -74,6 +74,16 @@ describe('useAuth Hook', () => {
       name: 'John Doe',
     };
 
+    const expectedTransformedUser = {
+      id: 'user-123',
+      clerkId: 'clerk-123',
+      email: 'john@example.com',
+      name: 'John Doe',
+      youtubeChannelId: undefined,
+      youtubeChannelName: undefined,
+      stripeCustomerId: undefined,
+    };
+
     (useClerkAuth as any).mockReturnValue({
       isLoaded: true,
       userId: 'clerk-123',
@@ -101,7 +111,7 @@ describe('useAuth Hook', () => {
     renderHook(() => useAuth());
 
     await waitFor(() => {
-      expect(mockSetUser).toHaveBeenCalledWith(mockDbUser);
+      expect(mockSetUser).toHaveBeenCalledWith(expectedTransformedUser);
       expect(mockSetAuthenticated).toHaveBeenCalledWith(true);
       expect(mockSetLoading).toHaveBeenCalledWith(false);
     });

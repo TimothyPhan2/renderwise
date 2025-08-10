@@ -93,6 +93,8 @@ describe('Authentication Components', () => {
 
       render(<SignUpForm />);
 
+      fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
+      fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Doe' } });
       fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'john@example.com' } });
       fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'password123' } });
       fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
