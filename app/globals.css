@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    --background: 0 0% 95%;
+    --foreground: 0 0% 5%;
+    --card: 0 0% 89%;
+    --card-foreground: 0 0% 5%;
+    --popover: 0 0% 89%;
+    --popover-foreground: 0 0% 5%;
+    --primary: 206 51% 84%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 236 51% 84%;
+    --secondary-foreground: 0 0% 5%;
+    --muted: 0 0% 75%;
+    --muted-foreground: 0 0% 30%;
+    --accent: 176 51% 84%;
+    --accent-foreground: 0 0% 5%;
+    --destructive: 348 100% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 69%;
+    --input: 0 0% 69%;
+    --ring: 219 51% 61%;
+    --chart-1: 206 51% 79%;
+    --chart-2: 356 51% 79%;
+    --chart-3: 56 51% 79%;
+    --chart-4: 176 51% 79%;
+    --chart-5: 236 51% 79%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 0 0% 5%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 13%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 206 51% 64%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 236 52% 74%;
+    --secondary-foreground: 0 0% 5%;
+    --muted: 0 0% 34%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 176 51% 64%;
+    --accent-foreground: 0 0% 5%;
+    --destructive: 348 100% 39%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 23%;
+    --input: 0 0% 20%;
+    --ring: 219 51% 61%;
+    --chart-1: 206 51% 79%;
+    --chart-2: 356 51% 79%;
+    --chart-3: 56 51% 79%;
+    --chart-4: 176 51% 79%;
+    --chart-5: 236 51% 79%;
+  }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --font-sans: var(--font-geist-sans), Inter, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 0 0% 5%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 13%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 206 51% 64%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 236 52% 74%;
+    --secondary-foreground: 0 0% 5%;
+    --muted: 0 0% 34%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 176 51% 64%;
+    --accent-foreground: 0 0% 5%;
+    --destructive: 348 100% 39%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 23%;
+    --input: 0 0% 20%;
+    --ring: 219 51% 61%;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
